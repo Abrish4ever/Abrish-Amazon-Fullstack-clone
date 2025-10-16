@@ -1,0 +1,39 @@
+import  { useEffect,useContext } from 'react'
+import "./App.css";
+import { auth } from "./Components/Utils/firebase";
+import {onAuthStateChanged} from 'firebase/auth'
+import {dataContext} from './Components/DataProvider/DataProvider'
+import { Type } from './Components/Utils/action.type';
+import Router from './Router';
+import "react-toastify/dist/ReactToastify.css";
+import { ToastContainer } from "react-toastify";
+
+const App = () => {
+
+  const [{user}, dispatch] =useContext(dataContext)
+  useEffect(()=> {
+    auth.onAuthStateChanged((authUser) => {
+      if (authUser) {
+        // console.log(authUser)
+        dispatch({
+          type: Type.ADD_USER,
+          item: authUser,
+        });
+      } else {
+        dispatch({
+          type: Type.ADD_USER,
+          item: null,
+        });
+      }
+    });
+  }, [])
+
+  return (
+    <>
+    <Router/>
+    <ToastContainer/>
+    </>
+  )
+}
+
+export default App
